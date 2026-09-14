@@ -32,7 +32,7 @@ Space →      مرحبا␣
 - Digits work the way you already use them: `2`=ء/ق, `3`=ع, `5`=خ, `6`=ط, `7`=ح, `8`=ق, `9`=ص. `sh`, `kh`, `gh`, `th`, `dh` too. Vowels optional.
 - `?` and `,` become `؟` and `،` while you're in Arabic.
 - Pick a second-ranked word once and Franco ranks it first next time.
-- `⌘⇧A` turns it off instantly for English. `⌘⇧1-4` switch language.
+- `⌘⇧A` turns it off instantly for English. `⌃⌥1-4` switch language.
 
 ## Why the candidates are good
 

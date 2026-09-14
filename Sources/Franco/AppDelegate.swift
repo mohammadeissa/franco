@@ -37,7 +37,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
         for (i, l) in languages.enumerated() {
             let it = NSMenuItem(title: "\(l.1)  \(l.2)", action: #selector(pickLanguage(_:)), keyEquivalent: "\(i + 1)")
-            it.keyEquivalentModifierMask = [.command, .shift]
+            it.keyEquivalentModifierMask = [.control, .option]
             it.target = self; it.representedObject = l.0
             menu.addItem(it); languageItems.append(it)
         }

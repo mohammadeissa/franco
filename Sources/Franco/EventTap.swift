@@ -59,8 +59,8 @@ final class EventTap {
             DispatchQueue.main.async { self.onToggle?() }
             return nil
         }
-        // Language hotkeys: same modifiers + 1..4
-        if settings.languageHotkeys, settings.hotkey.modifiersMatch(flags), hasCmdCtrlOpt {
+        // Language hotkeys: ⌃⌥1..4 (never ⌘⇧3/4/5 — those are macOS screenshot keys)
+        if settings.languageHotkeys, flags.contains(.maskControl), flags.contains(.maskAlternate), !flags.contains(.maskCommand), !flags.contains(.maskShift) {
             let digits: [Int64: Int] = [18: 0, 19: 1, 20: 2, 21: 3]
             if let idx = digits[keyCode] {
                 DispatchQueue.main.async { self.onLanguage?(idx) }
