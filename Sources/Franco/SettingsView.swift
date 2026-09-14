@@ -27,7 +27,10 @@ struct SettingsView: View {
                         .keyboardShortcut(.defaultAction)
                     Button("Reset") { settings.hotkey = .default }.controlSize(.small)
                 }
-                Toggle("Language shortcuts ⌃⌥1 Arabic · ⌃⌥2 Hindi · ⌃⌥3 Russian · ⌃⌥4 Persian", isOn: $settings.languageHotkeys)
+                Toggle("Language shortcuts (\(settings.languageModifierDisplay)1 Arabic · 2 Hindi · 3 Russian · 4 Persian)", isOn: $settings.languageHotkeys)
+                Picker("Language shortcut modifiers", selection: $settings.languageModifiers) {
+                    ForEach(Settings.modifierChoices, id: \.0) { Text("\($0.1) + 1–4").tag($0.0) }
+                }
             } header: { Text("General") }
 
             Section {

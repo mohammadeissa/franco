@@ -37,7 +37,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(.separator())
         for (i, l) in languages.enumerated() {
             let it = NSMenuItem(title: "\(l.1)  \(l.2)", action: #selector(pickLanguage(_:)), keyEquivalent: "\(i + 1)")
-            it.keyEquivalentModifierMask = [.control, .option]
+            it.keyEquivalentModifierMask = settings.languageModifierMask
             it.target = self; it.representedObject = l.0
             menu.addItem(it); languageItems.append(it)
         }
@@ -60,7 +60,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         enabledItem.state = settings.enabled ? .on : .off
         enabledItem.title = "Enabled   \(settings.hotkey.display)"
-        for it in languageItems { it.state = (it.representedObject as? String) == settings.language ? .on : .off }
+        for it in languageItems { it.state = (it.representedObject as? String) == settings.language ? .on : .off; it.keyEquivalentModifierMask = settings.languageModifierMask }
     }
 
     @objc private func toggleEnabled() {

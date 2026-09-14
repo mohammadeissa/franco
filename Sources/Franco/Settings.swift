@@ -62,12 +62,29 @@ final class Settings: ObservableObject {
     @Published var showHints: Bool { didSet { d.set(showHints, forKey: "showHints") } }
     @Published var languageHotkeys: Bool { didSet { d.set(languageHotkeys, forKey: "languageHotkeys") } }
     @Published var panelScale: Double { didSet { d.set(panelScale, forKey: "panelScale") } }
+    /// Modifier set for the language hotkeys (+ 1…4). Keys: "cs" ⌃⇧, "co" ⌃⌥, "os" ⌥⇧, "coc" ⌃⌥⌘
+    @Published var languageModifiers: String { didSet { d.set(languageModifiers, forKey: "languageModifiers") } }
+
+    static let modifierChoices: [(String, String)] = [("cs", "⌃⇧"), ("co", "⌃⌥"), ("os", "⌥⇧"), ("coc", "⌃⌥⌘")]
+    func languageModifiersMatch(_ f: CGEventFlags) -> Bool {
+        let c = f.contains(.maskControl), o = f.contains(.maskAlternate), s = f.contains(.maskShift), m = f.contains(.maskCommand)
+        switch languageModifiers {
+        case "co": return c && o && !s && !m
+        case "os": return o && s && !c && !m
+        case "coc": return c && o && m && !s
+        default: return c && s && !o && !m
+        }
+    }
+    var languageModifierMask: NSEvent.ModifierFlags {
+        switch languageModifiers { case "co": return [.control, .option]; case "os": return [.option, .shift]; case "coc": return [.control, .option, .command]; default: return [.control, .shift] }
+    }
+    var languageModifierDisplay: String { Settings.modifierChoices.first { $0.0 == languageModifiers }?.1 ?? "⌃⇧" }
 
     private init() {
         d.register(defaults: [
             "enabled": true, "language": "ar", "arabicPunctuation": true, "commitOnSpace": true,
             "panelAtCaret": true, "maxCandidates": 7, "learnWords": true, "showHints": true, "languageHotkeys": true,
-            "panelScale": 1.0
+            "panelScale": 1.0, "languageModifiers": "cs"
         ])
         enabled = d.bool(forKey: "enabled")
         language = d.string(forKey: "language") ?? "ar"
@@ -80,5 +97,6 @@ final class Settings: ObservableObject {
         showHints = d.bool(forKey: "showHints")
         languageHotkeys = d.bool(forKey: "languageHotkeys")
         panelScale = d.double(forKey: "panelScale")
+        languageModifiers = d.string(forKey: "languageModifiers") ?? "cs"
     }
 }
