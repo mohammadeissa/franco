@@ -1,0 +1,14 @@
+privet	привет
+kak	как
+dela	дела
+spasibo	спасибо
+horosho	хорошо
+ya	я
+lyublyu	люблю
+tebya	тебя
+schastye	счастье
+pozhaluysta	пожалуйста
+semya	семья
+zdravstvuyte	здравствуйте
+chto	что
+konechno	конечно
