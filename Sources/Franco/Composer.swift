@@ -50,6 +50,7 @@ final class Composer {
             if !trailing.isEmpty { Injector.type(trailing) }
             return
         }
+        Log.info("commit '\(typed)' → '\(out)'")
         Injector.replace(deleteCount: typed.count, with: out, trailing: trailing)
         if settings.learnWords, let c = cand, (c.kind != .exact || selected > 0) {
             translit?.lexicon.learn(c.text)
@@ -69,6 +70,7 @@ final class Composer {
     private func recompute(reposition: Bool) {
         guard let t = translit else { return }
         candidates = t.candidates(for: buffer, limit: settings.maxCandidates)
+        if buffer.count == 1 { Log.info("compose start '\(buffer)' → \(candidates.count) candidates") }
         selected = 0
         let m = panel.model
         m.input = buffer

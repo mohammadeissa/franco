@@ -15,6 +15,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     ]
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        Log.info("launch \(Bundle.main.bundlePath) trusted=\(AXIsProcessTrusted()) enabled=\(settings.enabled) lang=\(settings.language)")
         buildStatusItem()
         Engine.shared.warm(settings.language)
         tap.onToggle = { [weak self] in self?.toggleEnabled() }
@@ -104,6 +105,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func ensurePermissionThenStart() {
         let opts = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
         if AXIsProcessTrustedWithOptions(opts) {
+            Log.info("accessibility trusted at launch")
             startTap()
             return
         }
@@ -115,12 +117,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
         if alert.runModal() == .alertFirstButtonReturn { AppDelegate.openAccessibilityPane() }
         permissionTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] t in
-            if AXIsProcessTrusted() { t.invalidate(); self?.startTap() }
+            if AXIsProcessTrusted() { Log.info("accessibility granted after prompt"); t.invalidate(); self?.startTap() }
         }
     }
 
     private func startTap() {
-        if !tap.start() {
+        let ok = tap.start()
+        Log.info("event tap start: \(ok)")
+        if !ok {
             let alert = NSAlert()
             alert.messageText = "Could not install the keyboard tap"
             alert.informativeText = "Check Accessibility (and Input Monitoring) permissions for Franco, then relaunch."
